@@ -147,3 +147,94 @@ module Intro2 =
 
 
     //Exercise 1.2
+
+
+    // 1.2.1
+    type aexpr = 
+    | CstI of int
+    | Var of string
+    | Add of aexpr * aexpr
+    | Mul of aexpr * aexpr
+    | Sub of aexpr * aexpr
+
+    // 1.2.2
+    // Sub(Var "v", Add(Var "w", Var "z"))
+    // Mul(CstI 2, Sub(Var "v", Add(Var "w", Var "z")))
+    // Add(Add(Var "x", Var "y"), Add(Var "z", Var "v"))
+
+    // 1.2.3
+    let rec fmt aexpr: string =
+        match aexpr with
+        | CstI i -> string i
+        | Var x -> x
+        | Add (e1, e2) -> "(" + fmt e1 + " + " + fmt e2 + ")"
+        | Sub (e1, e2) -> "(" + fmt e1 + " - " + fmt e2 + ")"
+        | Mul (e1, e2) -> "(" + fmt e1 + " * " + fmt e2 + ")"
+
+
+    //    
+    let example1 = Sub(Var "x", CstI 34)
+    let result1 = fmt example1
+    // result1 should be "(x - 34)"
+
+    let example2 = Add(Var "x", Mul(CstI 2, Var "y"))
+    let result2 = fmt example2
+    // result2 should be "(x + (2 * y))"
+
+    let example3 = Mul(Add(Var "a", CstI 10), Sub(Var "b", CstI 5))
+    let result3 = fmt example3
+    // result3 should be "((a + 10) * (b - 5))"
+
+    let exampleVar1 = Sub(Var "v", Add(Var "w", Var "z"))
+    let resultVar1 = fmt exampleVar1
+    // result should be "(v - (w + z))"
+
+    let exampleVar2 = Mul(CstI 2, Sub(Var "v", Add(Var "w", Var "z")))
+    let resultVar2 = fmt exampleVar2
+    // result should be "(2 * (v - (w + z)))"
+
+    let exampleVar3 = Add(Add(Var "x", Var "y"), Add(Var "z", Var "v"))
+    let resultVar3 = fmt exampleVar3
+    // result should be "((x + y) + (z + v))"
+
+    // 1.2.4
+    let rec simplify aexpr : aexpr = 
+        match aexpr with
+        | Add(CstI 0, e2) -> simplify e2
+        | Add(e1, CstI 0) -> simplify e1
+        | Sub(e1, CstI 0) -> simplify e1
+        | Mul(CstI 1, e2) -> simplify e2
+        | Mul(e1, CstI 1) -> simplify e1
+        | Mul(CstI 0, _) -> CstI 0 
+        | Mul(_, CstI 0) -> CstI 0
+        | Add(e1, e2) ->
+            let i1 = simplify e1
+            let i2 = simplify e2
+            if i1 = e1 && i2 = e2 then Add(i1,i2)
+            else simplify (Add(i1,i2))
+        | Sub(e1, e2) -> 
+            let i1 = simplify e1
+            let i2 = simplify e2
+            if i1 = e1 && i2 = e2 then Sub(i1,i2)
+            else simplify (Sub(i1,i2))
+        | Mul(e1, e2) -> 
+            let i1 = simplify e1
+            let i2 = simplify e2
+            if i1 = e1 && i2 = e2 then Mul(i1,i2)
+            else simplify (Mul(i1,i2))
+        | _ -> aexpr //No simplification can be done.
+
+    let example4 = Add(Var "x", CstI 0)
+    let simplified4 = simplify example4
+    // simplified1 should be Var "x"
+
+    let example5 = Mul(Add(Var "x", CstI 0), CstI 1)
+    let simplified5 = simplify example5
+    // simplified2 should be Var "x"
+
+    let example6 = Mul(Add(CstI 1, CstI 0), Sub(Var "y", CstI 0))
+    let simplified6 = simplify example6
+    // simplified3 should be Var "y"       
+
+
+    // 1.2.5

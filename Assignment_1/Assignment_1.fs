@@ -238,3 +238,44 @@ module Intro2 =
 
 
     // 1.2.5
+
+    
+
+
+
+
+    // 1.3
+    let rec fmt2 pre aexpr: string =
+        let currentPrec= 
+            match aexpr with
+            | Add _  -> 2
+            | Sub _ -> 2
+            | Mul _ -> 3
+            | _ -> 4
+        let formatted = 
+            match aexpr with
+            | CstI i -> string i
+            | Var x -> x
+            | Add (e1, e2) -> fmt2 2 e1 + " + " + fmt2 3 e2
+            | Sub (e1, e2) -> fmt2 2 e1 + " - " + fmt2 3 e2
+            | Mul (e1, e2) -> fmt2 3 e1 + " * " + fmt2 4 e2
+
+        if currentPrec < pre then
+            "(" + formatted + ")"
+        else
+            formatted
+    let example7 = Mul(Sub(Var "a", Var "b"), Var "c")
+    let removeExcessParenth7 = fmt2 0 example7    
+    // removeExessParenth7 should be "(a-b)*c"
+
+    let example8 = Sub(Mul(Var "a", Var "b"), Var "c")
+    let removeExcessParenth8 = fmt2 0 example8   
+    // removeExessParenth8 should be "a*b-c"
+
+    let example9 = Sub(Sub(Var "a", Var "b"), Var "c")
+    let removeExcessParenth9 = fmt2 0 example7    
+    // removeExessParenth9 should be "a-b-c"
+
+    let example10 = Sub(Var "a", Sub(Var "b", Var "c")) 
+    let removeExcessParenth10 = fmt2 0 example7  
+    // removeExessParenth10 should be "a-(b-c)"   

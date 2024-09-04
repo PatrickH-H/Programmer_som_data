@@ -39,8 +39,8 @@ module Intro1 =
         | Prim("+", e1, e2) -> evalm e1 + evalm e2
         | Prim("*", e1, e2) -> evalm e1 * evalm e2
         | Prim("-", e1, e2) -> 
-        let res = evalm e1 - evalm e2
-        if res < 0 then 0 else res 
+            let res = evalm e1 - evalm e2
+            if res < 0 then 0 else res 
         | Prim _            -> failwith "unknown primitive";;
 
 
@@ -244,7 +244,7 @@ module Intro2 =
 
 
 
-    // 1.3
+    //Exercise 1.3
     let rec fmt2 pre aexpr: string =
         let currentPrec= 
             match aexpr with
@@ -273,9 +273,53 @@ module Intro2 =
     // removeExessParenth8 should be "a*b-c"
 
     let example9 = Sub(Sub(Var "a", Var "b"), Var "c")
-    let removeExcessParenth9 = fmt2 0 example7    
+    let removeExcessParenth9 = fmt2 0 example9    
     // removeExessParenth9 should be "a-b-c"
 
     let example10 = Sub(Var "a", Sub(Var "b", Var "c")) 
-    let removeExcessParenth10 = fmt2 0 example7  
+    let removeExcessParenth10 = fmt2 0 example10  
     // removeExessParenth10 should be "a-(b-c)"   
+
+
+
+
+    //Exercise 2.1
+    
+    type expr = 
+    | CstI of int
+    | Var of string
+    | Let of (string * expr) list * expr 
+    | Prim of string * expr * expr
+
+    let rec lookup env x =
+        match env with 
+        | []        -> failwith (x + " not found")
+        | (y, v)::r -> if x=y then v else lookup r x;;
+
+    let rec eval e (env : (string * int) list) : int =
+        match e with
+        | CstI i -> i
+        | Var x -> lookup env x
+        | Prim(ope, e1, e2) ->
+            let i1 = eval e1 env
+            let i2 = eval e2 env
+            match ope with 
+            | "+" -> i1 + i2
+            | "*" -> i1 * i2
+            | "-" -> i1 * i2
+            |"Max" -> if i1 > i2 then i1 else i2
+            |"Min" -> if i1 < i2 then i1 else i2
+            |"==" -> if i1 = i2 then 1 else 0
+            |_ -> failwith ("Unknown uperator " + ope)
+        | Let(bindings, body) ->
+            // Evaluate each binding in sequence and extend the environment
+            let newEnv = 
+                List.fold (fun env (x, rhs) -> 
+                    let value = eval rhs env
+                    (x, value) :: env) env bindings
+            eval body newEnv
+    let example11 = Let ([("x1", Prim("+", CstI 5, CstI 7)); ("x2", Prim("*", Var "x1", CstI 2))], Prim("+", Var "x1", Var "x2"))
+    let testExample11 = eval example11 []
+
+
+    //Exercise 2.2

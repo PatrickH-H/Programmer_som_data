@@ -323,3 +323,34 @@ module Intro2 =
 
 
     //Exercise 2.2
+
+    let mem x ys = List.exists (fun y -> x=y) ys
+
+    let rec union (xs, ys) =
+        match xs with
+        | [] -> ys
+        | x::xr -> if mem x ys then union(xr, ys) else x :: union(xr, ys)
+
+
+    let rec minus (xs, ys) =
+        match xs with
+        | [] -> []
+        | x::xr -> if mem x ys then minus(xr, ys) else x :: minus (xr, ys)
+
+    let rec freevars e : string list =
+        match e with
+        | CstI x -> []
+        | Var x -> [x]
+        | Prim(ope, e1, e2) -> union (freevars e1, freevars e2)
+        | Let(bindings, body) ->
+            let rec processBindings (bindings, boundVars, freeVars) =
+                match bindings with 
+                | [] -> freeVars, boundVars
+                | (x, rhs) :: rest ->
+                    let rhsFreeVars = minus (freevars rhs, boundVars)
+                    processBindings (rest, x :: boundVars, union (freeVars, rhsFreeVars))
+            
+            let freeVars, boundVars = processBindings (bindings, [],[])
+
+            union (freeVars, minus (freevars body, boundVars))
+    let example12 = Let([("x1", Prim("+", Var "x1", CstI 7));("x2", Prim("*", Var "x1", CstI 2))], Prim("+", Var "x1", Var "x2"))    

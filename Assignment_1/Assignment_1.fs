@@ -294,7 +294,7 @@ module Intro2 =
     let rec lookup env x =
         match env with 
         | []        -> failwith (x + " not found")
-        | (y, v)::r -> if x=y then v else lookup r x;;
+        | y, v::r -> if x=y then v else lookup r x;;
 
     let rec eval e (env : (string * int) list) : int =
         match e with
@@ -320,7 +320,7 @@ module Intro2 =
             eval body newEnv
     let example11 = Let ([("x1", Prim("+", CstI 5, CstI 7)); ("x2", Prim("*", Var "x1", CstI 2))], Prim("+", Var "x1", Var "x2"))
     let testExample11 = eval example11 []
-
+    // testExample11 should be 36
 
     //Exercise 2.2
 
@@ -354,3 +354,52 @@ module Intro2 =
 
             union (freeVars, minus (freevars body, boundVars))
     let example12 = Let([("x1", Prim("+", Var "x1", CstI 7));("x2", Prim("*", Var "x1", CstI 2))], Prim("+", Var "x1", Var "x2"))    
+    let testFreeVariable12 = freevars example12
+    // testFreeVariable12 should be ['x1']
+
+
+
+
+    //Exercise 2.3
+
+    type texpr =                          
+    | TCstI of int
+    | TVar of int                         
+    | TLet of texpr * texpr               
+    | TPrim of string * texpr * texpr;;
+
+
+
+    let rec getindex vs x = 
+        match vs with 
+        | []    -> failwith "Variable not found"
+        | (y::yr) -> if x=y then 0 else 1 + getindex yr x
+
+
+    let rec tcomp (e : expr) (cenv : string list) : texpr =
+        match e with
+        | CstI i -> TCstI i
+        | Var x -> TVar (getindex cenv x)
+        | Prim(ope, e1, e2) -> TPrim(ope, tcomp e1 cenv, tcomp e2 cenv)
+        | Let(bindings, body) ->
+            let rec build_let_chain (bindings : (string * expr) list) (cenv : string list) : texpr * string list =
+                match bindings with
+                | [] -> (tcomp body cenv, cenv)  (* Directly use the body expression here *)
+                | (x, rhs) :: rest ->
+                    let rhs_texpr = tcomp rhs cenv
+                    let (next_texpr, new_cenv) = build_let_chain rest (x :: cenv)
+                    (TLet(rhs_texpr, next_texpr), new_cenv)
+            
+            let (bindings_texpr, _) = build_let_chain bindings cenv
+            bindings_texpr
+
+
+
+
+
+
+    
+    let example13 = Let([("x", CstI 10); ("y", Prim("+", Var "x", CstI 5))], Var "y")
+    let result13 = tcomp example13 ["x";"y"]
+    // results13 should be TLet (TCstI 10, TLet (TPrim ("+", TVar 0, TCstI 5), TVar 1))  
+    // Can't figure out why it return TVar 0 instead of TVar 1 in the end

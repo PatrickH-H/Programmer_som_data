@@ -401,5 +401,10 @@ module Intro2 =
     
     let example13 = Let([("x", CstI 10); ("y", Prim("+", Var "x", CstI 5))], Var "y")
     let result13 = tcomp example13 ["x";"y"]
+
     // results13 should be TLet (TCstI 10, TLet (TPrim ("+", TVar 0, TCstI 5), TVar 1))  
     // Can't figure out why it return TVar 0 instead of TVar 1 in the end
+
+    let example14 = Let([("a", CstI 3); ("b", Prim("*", Var "a", CstI 4))], Prim("+", Var "a", Var "b"))
+    let result14 = tcomp example14 ["a";"b"]¨
+    //TLet (TLet (TCstI 3, TLet (TPrim ("*", TVar 0, TCstI 4), TPrim ("+", TVar 0, TVar 1))), TVar 1)

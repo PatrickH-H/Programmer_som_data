@@ -8,8 +8,8 @@ type expr =
   | Prim of string * expr * expr
 
 type stackvalue =
-  | Value                               (* A computed value *)
-  | Bound of string                   (* A bound variable *)
+  | Value                            
+  | Bound of string                 
 
 type sinstr = 
     | SCstI of int
@@ -22,7 +22,7 @@ type sinstr =
 
 
 let getindex (cenv: stackvalue list) (bound: stackvalue) : int =
-    List.findIndex ((=) bound) cenv  // Simple environment lookup
+    List.findIndex ((=) bound) cenv 
 
 
 let rec scomp (e : expr) (cenv : stackvalue list) : sinstr list =
@@ -78,3 +78,14 @@ printfn "Test 1 (CstI 42): %A" test1
 printfn "Test 2 (Prim +): %A" test2
 printfn "Test 3 (Nested Prim): %A" test3
 printfn "Test 4 (Let and Prim +): %A" test4
+
+
+let intsToFile (inss : int list) (fname : string) = 
+    let text = String.concat " " (List.map string inss)
+    System.IO.File.WriteAllText(fname, text);;
+
+
+intsToFile(compile expr4) "test4.txt"
+
+
+// Exercise 3.2

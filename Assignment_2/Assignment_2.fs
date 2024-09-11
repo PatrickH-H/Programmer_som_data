@@ -89,3 +89,5 @@ intsToFile(compile expr4) "test4.txt"
 
 
 // Exercise 3.2
+
+// ^(b|a|(ab)+b*)(ba)*$

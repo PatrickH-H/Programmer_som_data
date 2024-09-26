@@ -1,5 +1,7 @@
 (*EXERCISE 4.1*)
 
+// How should we provide this, it runs fine? :D
+
 (*EXERCISE 4.2*)
 
 //A)
@@ -31,7 +33,10 @@ let rec sum_of_eighth_powers from_base to_base exp =
 let result = sum_of_eighth_powers 1 10 8
 
 (*EXERCISE 4.3*)
+// Changes are made in Absyn.fs and Fun.fs
 
 (*EXERCISE 4.4*)
+// ??
 
 (*EXERCISE 4.5*)
+// ??

@@ -60,7 +60,7 @@
 //   fromString "1 + let x=5 in let y=7+x in y+y end + x end";;
 
 (* Answer:
-
+  How is it inteded that we "document"/answer this (3.5)?
 *)
 
 // Exercise 3.6
@@ -70,7 +70,7 @@
 // that parses a string as an expression and compiles it to stack machine code.
 
 (* Answer:
-
+  We did not have enough time, will do it for resubmission
 *)
 
 // Exercise 3.7
@@ -82,5 +82,5 @@
 // F# [17].
 
 (* Answer:
-
+  We did not have enough time, will do it for resubmission
 *)

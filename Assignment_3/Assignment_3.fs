@@ -60,7 +60,16 @@
 //   fromString "1 + let x=5 in let y=7+x in y+y end + x end";;
 
 (* Answer:
-  How is it inteded that we "document"/answer this (3.5)?
+  fromString "1 + 2 * 3";;
+    val it: Absyn.expr = Prim ("+", CstI 1, Prim ("*", CstI 2, CstI 3))
+
+  fromString "1 - 2 - 3";;
+    val it: Absyn.expr = Prim ("-", CstI 1, Prim ("-", CstI 2, CstI 3))
+
+  fromString "let z = (17) in z + 2 * 3 end";;
+    val it: Absyn.expr =
+      Let ("z", CstI 17, Prim ("+", Var "z", Prim ("*", CstI 2, CstI 3))) 
+
 *)
 
 // Exercise 3.6
@@ -70,7 +79,15 @@
 // that parses a string as an expression and compiles it to stack machine code.
 
 (* Answer:
-  We did not have enough time, will do it for resubmission
+  let compString (input: string) : sinstr list =
+    let parsedExpr = fromString input
+    let compiledInstructions = scomp parsedExpr []
+  
+    compiledInstructions;;
+
+  // Output:
+    compString "1 + 1";;
+      val it: sinstr list = [SCstI 1; SCstI 1; SAdd]
 *)
 
 // Exercise 3.7
@@ -82,5 +99,24 @@
 // F# [17].
 
 (* Answer:
-  We did not have enough time, will do it for resubmission
+  Added to Absyn.fs:
+    expr:
+      | If of expr * expr * expr
+  
+  Added to ExprLex.fsl
+    keywords:
+      | "if" -> IF
+      | "then" -> THEN
+      | "else" -> ELSE
+    
+    rule token = parse: 
+      | '?'             { QMARK }
+      | ':'             { COLON }
+  
+  Added to ExprPar.fsy
+    %token IF THEN ELSE QMARK COLON
+
+    Expr:
+      | IF Expr THEN Expr ELSE Expr         { If($2, $4, $6)    }
+      | Expr QMARK Expr COLON Expr          { If($1, $3, $5)    } 
 *)

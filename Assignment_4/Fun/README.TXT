@@ -31,7 +31,7 @@ C. Using the lexer, parser and first-order evaluator together:
 
    fsyacc --module FunPar FunPar.fsy
    fslex --unicode FunLex.fsl
-   fsharpi -r /Users/marcus/Desktop/prdat/FsLexYacc-master/src/FsLexYacc.Runtime/bin/Debug/netstandard2.0/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs Fun.fs ParseAndRun.fs
+   dotnet fsi -r /Users/marcus/Desktop/prdat/FsLexYacc-master/src/FsLexYacc.Runtime/bin/Debug/netstandard2.0/FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs Parse.fs Fun.fs ParseAndRun.fs
 
    open ParseAndRun;;
    run (fromString "5+7");;

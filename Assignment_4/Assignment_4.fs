@@ -65,7 +65,56 @@ let result = sum_of_eighth_powers 1 10 8
 *)
 
 (*EXERCISE 4.4*)
-// ??
+(*
+    Added to FunPar.fsy:
+        %type <string list> Params
+        %type <Absyn.epxr list> Args
+
+        AppExpr:
+            AtExpr Args                         { Call($1, $2)           }
+        ;
+
+        Params: 
+            Name                                { [$1]                   }
+        | Name Params                         { $1 :: $2               }
+        ;
+
+        Args: 
+                                                { []                     }
+        | Expr                                { [$1]                   }
+        | Expr Args                           { $1 :: $2               }
+
+
+        (Changes to:
+            | LET Params NAME EQ Expr IN Expr END      { Letfun($2, $3, $5, $7) }
+        )
+
+    Test in "dotnet fsi":
+    input:      Call(Var "f", [Var "a"; Var "b"]);;
+    output:     val it: expr = Call (Var "f", [Var "a"; Var "b"])
+*)
 
 (*EXERCISE 4.5*)
-// ??
+(*
+    Added to FunPar.fsy:
+        %token AND OR
+        %nonassoc AND
+        %nonassoc OR
+
+        %type <string list> Params
+        %type <Absyn.expr list> Args 
+        | Expr AND Expr                       { Prim("&&", $1, $3)     }
+        | Expr OR Expr                        { Prim("||", $1, $3)     }
+
+    Added to FunLex.fsl:
+        | "&&"            { AND }
+        | "||"            { OR }
+
+    Test in dotnet fsi: 
+        input: true && false;;
+        output: val it: bool = false
+
+        input: true || false;;
+        output: val it: bool = true
+
+*)

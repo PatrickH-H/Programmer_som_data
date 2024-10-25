@@ -16,6 +16,7 @@
 %token EQ NE GT LT GE LE
 %token LPAR RPAR 
 %token EOF
+%token AND OR
 
 %left ELSE              /* lowest precedence  */
 %left EQ NE 
@@ -23,10 +24,14 @@
 %left PLUS MINUS
 %left TIMES DIV MOD 
 %nonassoc NOT           /* highest precedence  */
+%nonassoc AND
+%nonassoc OR
 
 %start Main
 %type <Absyn.expr> Main Expr AtExpr Const
 %type <Absyn.expr> AppExpr
+%type <string list> Params
+%type <Absyn.expr list> Args 
 
 %%
 
@@ -50,19 +55,31 @@ Expr:
   | Expr LT    Expr                     { Prim("<",  $1, $3)     }
   | Expr GE    Expr                     { Prim(">=", $1, $3)     }
   | Expr LE    Expr                     { Prim("<=", $1, $3)     }
+  | Expr AND Expr                       { Prim("&&", $1, $3)     }
+  | Expr OR Expr                        { Prim("||", $1, $3)     }                    
 ;
 
 AtExpr:
     Const                               { $1                     }
   | NAME                                { Var $1                 }
   | LET NAME EQ Expr IN Expr END        { Let($2, $4, $6)        }
-  | LET NAME NAME EQ Expr IN Expr END   { Letfun($2, $3, $5, $7) }
+  | LET Params NAME EQ Expr IN Expr END      { Letfun($2, $3, $5, $7) }
   | LPAR Expr RPAR                      { $2                     }
 ;
 
 AppExpr:
-    AtExpr AtExpr                       { Call($1, $2)           }
-  | AppExpr AtExpr                      { Call($1, $2)           }
+    AtExpr Args                         { Call($1, $2)           }
+;
+
+Params: 
+    NAME                                { [$1]                   }
+  | NAME Params                         { $1 :: $2               }
+;
+
+Args: 
+    /* empty */                         { []                     }
+  | Expr                                { [$1]                   }
+  | Expr Args                           { $1 :: $2               }
 ;
 
 Const:

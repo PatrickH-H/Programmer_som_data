@@ -1,6 +1,8 @@
 {
  (* File MicroC/CLex.lex
     Lexer specification for micro-C, a small imperative language
+
+    Added ++, -- and for -> FOR
   *)
 
 module CLex

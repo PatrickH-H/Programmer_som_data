@@ -4,6 +4,22 @@ void main(int n) {
     arr[1] = 13;
     arr[2] = 9;
     arr[3] = 8;
+    arr[4] = 7;
+    arr[5] = 13;
+    arr[6] = 9;
+    arr[7] = 8;
+    arr[8] = 7;
+    arr[9] = 13;
+    arr[10] = 9;
+    arr[11] = 8;
+    arr[12] = 7;
+    arr[13] = 13;
+    arr[14] = 9;
+    arr[15] = 8;
+    arr[16] = 7;
+    arr[17] = 13;
+    arr[18] = 9;
+    arr[19] = 8;
 
     square(n, arr);
 

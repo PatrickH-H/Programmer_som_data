@@ -1,0 +1,42 @@
+ Prog
+    [Fundec
+       (None, "main", [(TypI, "n")],
+        Block
+          [Stmt
+             (While
+                (Prim2 (">", Access (AccVar "n"), CstI 0),
+                 Block
+                   [Stmt (Expr (Prim1 ("printi", Access (AccVar "n"))));
+                    Stmt
+                      (Expr
+                         (Assign
+                            (AccVar "n",
+                             Prim2 ("-", Access (AccVar "n"), CstI 1))))]));
+           Stmt (Expr (Prim1 ("printc", CstI 10)))])]
+
+
+Declarations:
+Fundec: This node represents a function declaration.
+The function name is "main".
+It has parameters represented as [(TypI, "n")], indicating a single integer parameter n of type TypI.
+
+Block:
+This node represents a block of statements enclosed within the function. It contains all the executable statements within the function body.
+
+
+Statements:
+While: The first statement is a While loop.
+The condition for the loop is represented by Prim2 (">", Access (AccVar "n"), CstI 0), which checks if the variable n is greater than 0.
+The body of the loop is another block that contains:
+A statement that prints the value of n using Prim1 ("printi", Access (AccVar "n")).
+A statement that decrements n by 1 using an Assign expression, represented as Assign (AccVar "n", Prim2 ("-", Access (AccVar "n"), CstI 1)).
+Final Statement: After the loop, there is another statement that prints the character represented by CstI 10 using Prim1 ("printc", CstI 10).
+
+Types:
+The type of the parameter n is represented as TypI, indicating that it is an integer type.
+Expressions:
+
+Expressions in the program include:
+Primitive operations: Like Prim2 for binary operations (e.g., >, -).
+Access: Representing access to the variable n (e.g., Access (AccVar "n")).
+Constant Integers: Represented by CstI for integer values (e.g., CstI 0, CstI 1, CstI 10).

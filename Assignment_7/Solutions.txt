@@ -1,0 +1,106 @@
+//Solution for ex3.c
+LDARGS                   // Load command-line arguments
+CALL (1, "L1")           // Call function at label L1 with 1 argument
+STOP                     // Stop execution
+Label "L1"
+INCSP 1                  // Increase stack pointer to allocate space for local variable
+GETBP                    // Get base pointer
+CSTI 1                   // Constant integer 1
+ADD                      // Compute BP + 1 (address of local variable)
+CSTI 0                   // Constant integer 0
+STI                      // Store 0 at BP + 1 (initialize local variable to 0)
+INCSP -1                 // Deallocate temporary
+GOTO "L3"                // Jump to label L3
+Label "L2"
+GETBP                    // Get base pointer
+CSTI 1                   // Constant integer 1
+ADD                      // Compute BP + 1 (address of local variable)
+LDI                      // Load value from BP + 1
+PRINTI                   // Print the value
+INCSP -1                 // Deallocate temporary
+GETBP                    // Get base pointer
+CSTI 1                   // Constant integer 1
+ADD                      // Compute BP + 1 (address of local variable)
+GETBP                    // Get base pointer
+CSTI 1                   // Constant integer 1
+ADD                      // Compute BP + 1 again
+LDI                      // Load value of local variable
+CSTI 1                   // Constant integer 1
+ADD                      // Increment local variable by 1
+STI                      // Store incremented value back to BP + 1
+INCSP -1                 // Deallocate temporary
+INCSP 0                  // Adjust stack pointer for next operation
+Label "L3"
+GETBP                    // Get base pointer
+CSTI 1                   // Constant integer 1
+ADD                      // Compute BP + 1 (address of local variable)
+LDI                      // Load value of local variable
+GETBP                    // Get base pointer
+CSTI 0                   // Constant integer 0
+ADD                      // Access argument from command line
+LDI                      // Load command-line argument
+LT                       // Check if local variable is less than command-line argument
+IFNZRO "L2"              // If condition is true, jump to label L2
+INCSP -1                 // Deallocate temporary
+RET 0                    // Return from function
+
+
+
+//Solution for ex5.c
+LDARGS                   // Load command-line arguments
+CALL (1, "L1")           // Call function at label L1 with 1 argument
+STOP                     // Stop execution
+Label "L1"
+INCSP 1                  // Increase stack pointer for local variable in main function
+GETBP                    // Get base pointer
+CSTI 1                   // Constant integer 1
+ADD                      // Compute BP + 1
+GETBP                    // Get base pointer
+CSTI 0                   // Access argument from command line
+ADD                      // Add offset to get argument location
+LDI                      // Load argument
+STI                      // Store argument in local variable
+INCSP -1                 // Deallocate temporary
+INCSP 1                  // Allocate space for nested block variable
+GETBP                    // Get base pointer
+CSTI 0                   // Access main function argument
+ADD                      // Add offset to get argument location
+LDI                      // Load command-line argument
+GETBP                    // Get base pointer
+CSTI 2                   // Prepare for function call
+ADD                      // Compute address for function argument
+CALL (2, "L2")           // Call function at label L2 with 2 arguments
+INCSP -1                 // Deallocate after function call
+GETBP                    // Get base pointer
+CSTI 2                   // Constant integer 2 (variable offset)
+ADD                      // Address for local variable
+LDI                      // Load result of function call
+PRINTI                   // Print the result
+INCSP -1                 // Deallocate temporary
+INCSP -1                 // Clean up local variables
+GETBP                    // Get base pointer
+CSTI 1                   // Offset for main function variable
+ADD                      // Compute address for local variable
+LDI                      // Load local variable value
+PRINTI                   // Print the local variable value
+INCSP -1                 // Clean up
+INCSP -1                 // Adjust stack pointer
+RET 0                    // Return from main function
+Label "L2"
+GETBP                    // Get base pointer
+CSTI 1                   // Offset to access parameter
+ADD                      // Address of function parameter
+LDI                      // Load parameter
+GETBP                    // Get base pointer
+CSTI 0                   // Access second function parameter
+ADD                      // Address of parameter
+LDI                      // Load parameter
+GETBP                    // Get base pointer
+CSTI 0                   // Address for local storage
+ADD                      // Access local variable
+LDI                      // Load value of local variable
+MUL                      // Multiply the values
+STI                      // Store result in variable
+INCSP -1                 // Deallocate temporary
+INCSP 0                  // Adjust stack pointer
+RET 1                    // Return value from function

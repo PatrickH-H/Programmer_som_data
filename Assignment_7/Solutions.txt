@@ -1,4 +1,7 @@
-//Solution for ex3.c
+##Exercise 3.1
+
+
+#Solution for ex3.c
 LDARGS                   // Load command-line arguments
 CALL (1, "L1")           // Call function at label L1 with 1 argument
 STOP                     // Stop execution
@@ -46,7 +49,7 @@ RET 0                    // Return from function
 
 
 
-//Solution for ex5.c
+#Solution for ex5.c
 LDARGS                   // Load command-line arguments
 CALL (1, "L1")           // Call function at label L1 with 1 argument
 STOP                     // Stop execution
@@ -104,3 +107,41 @@ STI                      // Store result in variable
 INCSP -1                 // Deallocate temporary
 INCSP 0                  // Adjust stack pointer
 RET 1                    // Return value from function
+
+##Exercise 8.3
+Added 
+    | PreInc (acc) -> cAccess acc varEnv funEnv @ [DUP;LDI;CSTI 1; ADD; STI]
+    | PreDec (acc) -> cAccess acc varEnv funEnv @ [DUP;LDI;CSTI 1; SUB; STI]
+In the method cExpr in the Comp.fs file
+Tested with 
+
+void main(int n){
+    print n;
+    ++n;
+    print n;
+}
+
+In exercise_8.3_test.c
+
+
+##Exercise 8.4
+  [LDARGS; CALL (0, "L1"); STOP; Label "L1"; INCSP 1; GETBP; CSTI 0; ADD;
+   CSTI 20000000; STI; INCSP -1; GOTO "L3"; Label "L2"; GETBP; CSTI 0; ADD;
+   GETBP; CSTI 0; ADD; LDI; CSTI 1; SUB; STI; INCSP -1; INCSP 0; Label "L3";
+   GETBP; CSTI 0; ADD; LDI; IFNZRO "L2"; INCSP -1; RET -1]
+Can be seen in ex8.out
+
+
+##Exercise 8.5
+Added ExprCond in Absyn.fs. Added question mark and colon as terminals in CLex.fsl and CPar.fsy.
+Added
+| CondExpr(e1, e2, e3) ->
+      let labelFalse  = newLabel()
+      let labelEnd = newLabel()
+
+      cExpr e1 varEnv funEnv    @ [IFZERO labelFalse]
+      @ cExpr e2 varEnv funEnv  @ [GOTO labelEnd]
+      @ [Label labelFalse]      @ cExpr e3 varEnv funEnv
+      @ [Label labelEnd]
+In the method in the Comp.fs file
+

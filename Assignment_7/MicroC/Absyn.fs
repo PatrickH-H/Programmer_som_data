@@ -25,6 +25,7 @@ and expr =
   | Andalso of expr * expr           (* Sequential and              *)
   | Orelse of expr * expr            (* Sequential or               *)
   | Call of string * expr list       (* Function call f(...)        *)
+  | CondExpr of expr * expr * expr  (* e1 ? e2 : e3                *)
   | PreInc of access
   | PreDec of access
                                                                    

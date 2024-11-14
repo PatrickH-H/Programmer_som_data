@@ -23,6 +23,8 @@ type token =
   | LT
   | GE
   | LE
+  | COLON
+  | QUESTIONMARK
   | PLUS
   | MINUS
   | TIMES
@@ -66,6 +68,8 @@ type tokenId =
     | TOKEN_LT
     | TOKEN_GE
     | TOKEN_LE
+    | TOKEN_COLON
+    | TOKEN_QUESTIONMARK
     | TOKEN_PLUS
     | TOKEN_MINUS
     | TOKEN_TIMES

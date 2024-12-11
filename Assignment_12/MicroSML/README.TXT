@@ -5,9 +5,10 @@ Archive microsml.zip contains the files used below
 
 A. Building the micro-SML command line compiler microsmlc:
 
-   fslex --unicode FunLex.fsl
-   fsyacc --module FunPar FunPar.fsy    
+   fslex --unicode FunLex.fsl (DONE)
+   fsyacc --module FunPar FunPar.fsy (DONE)    
 
+   (DONE)
    fsharpc -r FsLexYacc.Runtime.dll Absyn.fs FunPar.fs FunLex.fs TypeInference.fs HigherFun.fs Machine.fs Contcomp.fs ParseTypeAndRun.fs MicroSMLC.fs -o microsmlc.exe
 
    Compiling the test program test.sml:
